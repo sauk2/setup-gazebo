@@ -1,7 +1,7 @@
 import * as utils from "../utils";
 
-export async function activateBase(): Promise<number> {
-	return utils.exec("conda", ["activate"]);
+export async function activateEnv(name: string): Promise<number> {
+	return utils.exec("conda", ["activate", `${name}`]);
 }
 
 /**

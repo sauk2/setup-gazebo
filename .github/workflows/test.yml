@@ -229,8 +229,9 @@ jobs:
           node-version: '20.x'
       - uses: conda-incubator/setup-miniconda@835234971496cad1653abb28a638a281cf32541f  # v3
         with:
+          activate-environment: gz_env
           python-version: "3.10"
-          auto-activate-base: true
+          auto-activate-base: false
       - name: 'Check Gazebo installation on Windows runner'
         uses: ./
         with:
@@ -238,7 +239,7 @@ jobs:
       - name: 'Test Gazebo installation'
         shell: pwsh
         run: |
-          conda activate
+          conda activate gz_env
           gz sim --versions
 
   test_install_ros_gz_unofficial:

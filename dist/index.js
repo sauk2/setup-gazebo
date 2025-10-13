@@ -25842,12 +25842,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.activateBase = activateBase;
+exports.activateEnv = activateEnv;
 exports.runConda = runConda;
 const utils = __importStar(__nccwpck_require__(1314));
-function activateBase() {
+function activateEnv(name) {
     return __awaiter(this, void 0, void 0, function* () {
-        return utils.exec("conda", ["activate"]);
+        return utils.exec("conda", ["activate", `${name}`]);
     });
 }
 /**
@@ -26194,7 +26194,8 @@ function runWindows() {
     return __awaiter(this, void 0, void 0, function* () {
         const gazeboDistros = yield utils.getRequiredGazeboDistributions();
         for (const gazeboDistro of gazeboDistros) {
-            yield conda.activateBase();
+            const envName = process.env["CONDA_ENV_NAME"] || "gz_env";
+            yield conda.activateEnv(envName);
             yield conda.runConda([`gz-${gazeboDistro}`]);
         }
     });
