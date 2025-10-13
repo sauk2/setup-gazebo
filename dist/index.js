@@ -25842,8 +25842,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.activateEnv = activateEnv;
 exports.runConda = runConda;
 const utils = __importStar(__nccwpck_require__(1314));
+function activateEnv(name) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return utils.exec("conda", ["activate", `${name}`]);
+    });
+}
 /**
  * Run conda install on a list of specified packages.
  *
@@ -26181,35 +26187,6 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.runWindows = runWindows;
 const utils = __importStar(__nccwpck_require__(1314));
 const conda = __importStar(__nccwpck_require__(7725));
-// List of mapped Gazebo distro to gz-sim versions
-const validLibVersions = [
-    {
-        distro: "harmonic",
-        libVersion: 8,
-    },
-];
-/**
- * Get gz-sim library version corresponding to a gz-$collection
- * since conda does not currently support the gz-$collection metapackages.
- * See https://github.com/conda-forge/gz-sim-feedstock/issues/61
- *
- * @param gazeboDistro name of Gazebo distribution
- * @returns gz-sim version
- */
-function getLibVersion(gazeboDistro) {
-    return __awaiter(this, void 0, void 0, function* () {
-        let version;
-        validLibVersions.forEach((obj) => {
-            if (obj.distro == gazeboDistro) {
-                version = obj.libVersion;
-            }
-        });
-        if (version === undefined) {
-            throw new Error(`No conda packages available for gz-${gazeboDistro}`);
-        }
-        return version;
-    });
-}
 /**
  * Install Gazebo on a Windows worker
  */
@@ -26217,8 +26194,9 @@ function runWindows() {
     return __awaiter(this, void 0, void 0, function* () {
         const gazeboDistros = yield utils.getRequiredGazeboDistributions();
         for (const gazeboDistro of gazeboDistros) {
-            const version = yield getLibVersion(gazeboDistro);
-            yield conda.runConda([`gz-sim${version}`]);
+            const envName = process.env["CONDA_ENV_NAME"] || "gz_env";
+            yield conda.activateEnv(envName);
+            yield conda.runConda([`gz-${gazeboDistro}`]);
         }
     });
 }
