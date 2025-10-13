@@ -8,6 +8,8 @@ export async function runWindows(): Promise<void> {
 	const gazeboDistros = await utils.getRequiredGazeboDistributions();
 
 	for (const gazeboDistro of gazeboDistros) {
+		await conda.activateBase();
+
 		await conda.runConda([`gz-${gazeboDistro}`]);
 	}
 }

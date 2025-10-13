@@ -25842,8 +25842,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.activateBase = activateBase;
 exports.runConda = runConda;
 const utils = __importStar(__nccwpck_require__(1314));
+function activateBase() {
+    return __awaiter(this, void 0, void 0, function* () {
+        return utils.exec("conda", ["activate"]);
+    });
+}
 /**
  * Run conda install on a list of specified packages.
  *
@@ -26188,6 +26194,7 @@ function runWindows() {
     return __awaiter(this, void 0, void 0, function* () {
         const gazeboDistros = yield utils.getRequiredGazeboDistributions();
         for (const gazeboDistro of gazeboDistros) {
+            yield conda.activateBase();
             yield conda.runConda([`gz-${gazeboDistro}`]);
         }
     });
